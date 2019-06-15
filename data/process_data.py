@@ -4,6 +4,15 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    """ Load csv files which contains messages and categories information.
+    
+    Keyword arguments:
+    messages_filepath -- location of message csv file
+    categories_filepath -- location of categories csv file
+    
+    Returns:
+    df -- Dataframe containing both message and category info
+    """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath, dtype={'categories':'str'})
     df = messages.merge(categories, on='id')
@@ -33,10 +42,27 @@ def load_data(messages_filepath, categories_filepath):
     return df
 
 def clean_data(df):
+    """ Remove duplicated rows.
+    
+    Keyword arguments:
+    df -- original data set
+    
+    Returns:
+    df -- data set with out duplicated rows
+    """
     df = df.drop_duplicates()
     return df
 
 def save_data(df, database_filename):
+    """ Save dataframe to a sqlite database.
+    
+    Keyword arguments:
+    df -- dataframe to be saved
+    database_filename -- destination database
+    
+    Returns:
+    this function doesn't return anything
+    """
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('test2', engine, index=False)
 
